@@ -29,14 +29,9 @@ conda create -n model-merging --file ./distillation/requirements.txt
 conda activate model-merging
 
 
-3. Install dependencies:
-
-pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 –extra-index-url https://download.pytorch.org/whl/cu117pip install peft==0.3.0 transformers==4.28.1 wandb numpy==1.23.5
-
-
 ## Directory Structure
 
-ModelMergingKD/├── distillation/│   ├── multidataset_vector_merging_distill.py  # Main merging script│   └── submit_distill_merge.sh                 # SLURM submission script├── configs/                   # Model configuration files├── checkpoints/               # Pre-trained models├── csvs/                      # Evaluation results└── utils/                     # Helper functions
+ModelMergingKD/├── distillation/│   ├── multidataset_vector_merging_distill.py  # Main merging script│   └── run_kd_train.sh                 # SLURM submission script for KD-LoRA fine-tuning └── run_kd_merge.sh                 # SLURM submission script for merging experiment ├── configs/                   # Model configuration files └── utils/                     # Helper functions
 
 
 ## Running the Experiment
@@ -47,8 +42,13 @@ Ensure model checkpoints are available at specified directory. Models can be dow
 
 ### 2. Submit SLURM Job
 
-sbatch distillation/submit_distill_merge.sh
+The following script will start the distillation fine-tuning with LoRA models:
+sbatch distillation/run_kd_train.sh
 
+The following script will start the merging experiments (given that all file dependencies are correct):
+sbatch distillation/run_kd_merge.sh
+
+Our distilled models' training logs can be viewed at https://wandb.ai/eeboogi/KD-LoRA-Distillation?nw=nwusereeboogi
 
 
 For questions, contact: [boglarka.ecsedi@gatech.edu](mailto:boglarka.ecsedi@gatech.edu)
